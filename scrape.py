@@ -27,9 +27,12 @@ if __name__ == '__main__':
         writer.writerows([{fn: dict_get(p, fn) for fn in fieldnames} for p in project_list])
 
     pool = mp.Pool(concurrency)
-    projects_full = tqdm(pool.imap(api.get_project, [p['code'] for p in project_list_active]),
-                         total=len(project_list_active)
-                         )
+    projects_full = list(
+        tqdm(
+            pool.imap(api.get_project, [p['code'] for p in project_list_active]),
+            total=len(project_list_active)
+        )
+    )
 
     with open(f'data/{timestamp}.jsonl', 'w') as f:
         f.writelines([json.dumps(p) for p in projects_full])
