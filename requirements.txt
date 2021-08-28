@@ -1,0 +1,7 @@
+requests
+retry
+beautifulsoup4
+html5lib
+lxml
+tqdm
+pytz
