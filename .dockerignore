@@ -1,0 +1,7 @@
+data.jsonl
+data/
+env
+.idea/
+__pycache__/
+.env.sh
+.scrape.lock
