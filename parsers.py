@@ -11,7 +11,7 @@ def parse_datetime(val):
         datetime.strptime(val, "%d.%m.%Y о %H:%M")
     )
 
-    return t.strftime('%Y-%m-%d %H:%M:%S %z')
+    return t.isoformat()
 
 
 def _read_stub():

@@ -21,7 +21,14 @@ lockfile -r 5 -l 7200 "$LOCK" || exit 1 # 2 hours
 trap remove_lock EXIT
 ###
 
+git pull origin main || true
+
 source env/bin/activate
 mkdir -p data
 
 env/bin/python3 scrape.py
+
+FILETOADD=`ls -t data/votes_* | head -1`
+mv "${FILETOADD}" data/votes_latest.csv
+git add --force data/votes_latest.csv && git commit -m "Data updated" && git push origin main || true
+
