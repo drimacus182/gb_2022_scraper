@@ -5,6 +5,8 @@ from retry import retry
 
 
 class Api:
+    PROJECT_TYPES = dict(big=23, small=24)
+
     def __init__(self):
         self.session = None
         self.csrf_token = None
@@ -38,6 +40,9 @@ class Api:
 
     @retry(Exception, delay=15, backoff=1.2, max_delay=600)
     def get_project_list(self):
+        """
+        Get project list using /projects/map/18 endpoint. Returns rich info about projects
+        """
         self.ensure_context_created()
         xsrf_token = self.session.cookies['XSRF-TOKEN']
 
@@ -89,9 +94,21 @@ class Api:
         if self.session:
             self.session.close()
 
+    @retry(Exception, delay=15, backoff=1.2, max_delay=600)
+    def get_project_rating_list(self, project_type):
+        project_type_id = Api.PROJECT_TYPES[project_type]
+        return requests.get('https://gb.kyivcity.gov.ua/vote/statistics/data'
+                            '?perPage=10000'
+                            '&page=1'
+                            '&layout-type=view-grid'
+                            '&sortBy=rating'
+                            '&sortDir=desc'
+                            f'&project_type={project_type_id}').json()['data']
+
 
 if __name__ == '__main__':
     api = Api()
-    pr = api.get_project(421)
-    print(json.dumps(pr))
+    # pr = api.get_project(421)
+    # print(json.dumps(pr))
+    print(json.dumps(api.get_project_rating_list('small')))
 
